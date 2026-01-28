@@ -43,11 +43,6 @@ solver = st.sidebar.selectbox(
 c_input = st.sidebar.number_input('C', value=1.0)
 max_iter = st.sidebar.number_input('Max Iterations', value=200)
 
-multi_class = st.sidebar.selectbox(
-    'Multi Class',
-    ('auto', 'ovr', 'multinomial')
-)
-
 l1_ratio = st.sidebar.slider('l1 Ratio (only for elasticnet)', 0.0, 1.0, 0.5)
 
 # Plot initial data
@@ -59,17 +54,13 @@ orig = st.pyplot(fig)
 if st.sidebar.button('Run Algorithm'):
     orig.empty()
 
-    # ----- VALIDATION LOGIC -----
+    # ----- VALIDATION -----
     if penalty == 'elasticnet' and solver != 'saga':
         st.error("ElasticNet penalty only works with saga solver")
         st.stop()
 
     if penalty == 'l1' and solver not in ['liblinear', 'saga']:
         st.error("L1 penalty only works with liblinear or saga solver")
-        st.stop()
-
-    if solver == 'liblinear' and multi_class == 'multinomial':
-        st.error("liblinear does not support multinomial")
         st.stop()
 
     if penalty != 'elasticnet':
@@ -80,7 +71,6 @@ if st.sidebar.button('Run Algorithm'):
         C=c_input,
         solver=solver,
         max_iter=max_iter,
-        multi_class=multi_class,
         l1_ratio=l1_ratio
     )
 
